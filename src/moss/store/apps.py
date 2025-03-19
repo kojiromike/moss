@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ObjectStoreConfig(AppConfig):
+class StoreConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "object_store"
+    name = __package__

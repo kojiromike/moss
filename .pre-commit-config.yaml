@@ -2,7 +2,7 @@
 # Pre-commit is a multi-language package manager for pre-commit hooks.
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-exclude: ^poetry\.lock$
+exclude: ^(poetry\.lock|src/moss/store/migrations)$
 repos:
 - repo: https://github.com/abravalheri/validate-pyproject
   rev: v0.24
