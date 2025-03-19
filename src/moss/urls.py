@@ -39,4 +39,9 @@ urlpatterns = [
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     # ReDoc UI (alternative to Swagger)
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    path("api/v1/files/<int:id>/", FileViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"})),
+    path(
+        "api/v1/permissions/<int:id>/",
+        PermissionViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
+    ),
 ]
