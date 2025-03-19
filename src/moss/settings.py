@@ -182,3 +182,5 @@ def _check_aws_conn():
 
 
 _check_aws_conn()
+
+STATIC_ROOT = BASE_DIR / "static"
