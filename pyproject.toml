@@ -16,3 +16,18 @@ name = "moss"
 readme = "README.md"
 requires-python = ">=3.13"
 version = "0.1.0"
+
+[tool.autoflake]
+expand-star-imports = true
+remove-duplicate-keys = true
+remove-unused-variables = true
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.vulture]
+min_confidence = 100
+paths = ["."]
