@@ -71,10 +71,10 @@ POST   /api/v1/permissions                           # Set permissions
 
 ### Technologies:
 
-Framework: Django/DRF (quick to set up, good documentation)
-Database: SQLite for PoC (easy to replace with PostgreSQL later)
-S3 Client: boto3
-Authentication: PyJWT
+- Framework: Django/DRF (quick to set up, good documentation)
+- Database: SQLite for PoC (easy to replace with PostgreSQL later)
+- S3 Client: boto3
+- Authentication: PyJWT
 
 ### Core Components:
 
