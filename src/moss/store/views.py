@@ -1,6 +1,6 @@
-from resetframework.decorators import action
-from restframework import viewsets
-from restframework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from moss.store.models import File
 from moss.store.perms import HasFilePermission

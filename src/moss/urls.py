@@ -22,7 +22,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from restframework.routers import DefaultRouter
+from rest_framework.routers import DefaultRouter
 
 from moss.store.views import FileViewSet, PermissionViewSet
 
