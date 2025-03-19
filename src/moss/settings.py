@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "moss.store.apps.StoreConfig",
     "django_extensions",
+    "rest_framework" "drf_spectacular",
+    "moss.store.apps.StoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -130,9 +131,25 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "store.User"
 
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+# Django Spectacular settings
+# TODO: align this with descriptions found elsewhere in the package.
+SPECTACULAR_SETTINGS = {
+    "TITLE": "S3 Multi-Tenant Storage API",
+    "DESCRIPTION": "API for secure multi-tenant object storage using S3",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # Other settings
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
 }
 
 SIMPLE_JWT = {

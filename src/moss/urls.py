@@ -17,6 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from restframework.routers import DefaultRouter
 
 from moss.store.views import FileViewSet, PermissionViewSet
@@ -31,4 +36,10 @@ router.register(r"permissions", PermissionViewSet, basename="permission")
 
 urlpatterns = [
     path("api/v1/", include(router.urls)),
+    # Schema endpoints
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    # Swagger UI
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    # ReDoc UI (alternative to Swagger)
+    path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
