@@ -26,15 +26,12 @@ from rest_framework.routers import DefaultRouter
 
 from moss.store.views import FileViewSet, PermissionViewSet
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-]
-
 router = DefaultRouter()
 router.register(r"files", FileViewSet, basename="file")
 router.register(r"permissions", PermissionViewSet, basename="permission")
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
     path("api/v1/", include(router.urls)),
     # Schema endpoints
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
