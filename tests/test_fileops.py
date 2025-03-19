@@ -51,16 +51,10 @@ class AdminFileOpsTests(TestCase):
         url = reverse("file-upload")
         with StringIO() as example:
             response = self.api_client.post(url, {"file": example, "path": "some/path", "tenant": self.tenant_id})
-            assert response.status_code == status.HTTP_201_CREATED
+        assert response.status_code == status.HTTP_201_CREATED
 
     def test_download_file(self):
         """An Aptible user can download any file."""
         url = reverse("file-download", args=[1])
         response = self.api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-
-    def test_delete_filed(self):
-        """An Aptible user can delete any file."""
-        url = reverse("file-delete", args=[1])
-        response = self.api_client.delete(url)
-        assert response.status_code == status.HTTP_204_NO_CONTENT

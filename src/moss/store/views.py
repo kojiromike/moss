@@ -1,10 +1,12 @@
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
 
 from moss.store.models import File
 from moss.store.perms import HasFilePermission
 from moss.store.serializers import FileSerializer, PermissionSerializer
+from moss.store.service import S3_SERVICE
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -24,21 +26,28 @@ class FileViewSet(viewsets.ModelViewSet):
 
     # Custom actions for upload/download
     @action(detail=False, methods=["post"])
-    def upload(self, _request):
+    def upload(self, request):
         """
         Upload a file to S3 storage.
 
-        The file will be associated with the current user's tenant and
-        stored with appropriate permissions.
+        The file will be associated with the current user's tenant and stored with appropriate permissions.
         """
+        serializer = FileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(tenant=request.user.tenant, created_by=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=["get"])
-    def download(self, _request, _pk=None):
+    def download(self, request, pk=None):
         """
         Generate a pre-signed URL for downloading the file.
 
         The URL is temporary and will expire after a configured time period.
         """
+        file = self.get_object()
+        presigned_url = S3_SERVICE.generate_presigned_url(file.s3_key)
+        return Response({"url": presigned_url})
 
 
 class PermissionViewSet(viewsets.ModelViewSet):

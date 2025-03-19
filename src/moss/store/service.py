@@ -8,11 +8,15 @@ class S3Service:
         self.bucket_name = settings.AWS_STORAGE_BUCKET_NAME
 
     def generate_key(self, tenant_id, file_path):
+        """Generate the per-tenant prefix path for a file"""
         return f"{tenant_id}/{file_path}"
 
     def upload_file(self, file_obj, tenant_id, file_path):
+        """Upload a file to s3 and return the file's metadata"""
+        # TODO make this async?
         key = self.generate_key(tenant_id, file_path)
         self.s3_client.upload_fileobj(file_obj, self.bucket_name, key)
+        self.s3_client.Object(self.bucket_name, key).wait_until_exists()
         return key
 
     def generate_presigned_url(self, key, expiration_secs=3600):
@@ -23,3 +27,6 @@ class S3Service:
             },
         )
         return self.s3_client.generate_presigned_url("get_object", Params=params, ExpiresIn=expiration_secs)
+
+
+S3_SERVICE = S3Service()
