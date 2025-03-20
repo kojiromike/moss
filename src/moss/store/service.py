@@ -16,7 +16,7 @@ class S3Service:
         # TODO make this async?
         key = self.generate_key(tenant_id, file_path)
         self.s3_client.upload_fileobj(file_obj, self.bucket_name, key)
-        self.s3_client.Object(self.bucket_name, key).wait_until_exists()
+        # self.s3_client.Object(self.bucket_name, key).wait_until_exists()
         return key
 
     def generate_presigned_url(self, key, expiration_secs=3600):

@@ -32,9 +32,11 @@ class FileViewSet(viewsets.ModelViewSet):
 
         The file will be associated with the current user's tenant and stored with appropriate permissions.
         """
-        serializer = FileSerializer(data=request.data)
+        request.user.tenant
+        request.user
+        serializer = FileSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
-            serializer.save(tenant=request.user.tenant, created_by=request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

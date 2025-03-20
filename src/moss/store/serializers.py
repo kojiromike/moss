@@ -9,12 +9,17 @@ class FileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.File
-        fields = ("id", "name", "path", "created_at", "updated_at", "file")
+        fields = ("id", "name", "path", "created_at", "updated_at", "file", "created_by")
 
     def create(self, validated_data):
+        request = self.context.get("request")
+        user = request.user
+        tenant = request.user.tenant
+        created_by = user
         file = validated_data.pop("file")
-        tenant = validated_data.pop("tenant")
         path = validated_data["path"]
+        validated_data["tenant"] = tenant
+        validated_data["created_by"] = created_by
         S3_SERVICE.upload_file(file, tenant, path)
         return super().create(validated_data)
 
