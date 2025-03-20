@@ -46,13 +46,13 @@ Metadata Database:
 
 ```
 # File Operations
-GET    /api/v1/files?path=<path>&tenant=<tenant_id>  # List files
-GET    /api/v1/files/<file_id>                       # Download file
-POST   /api/v1/files?path=<path>&tenant=<tenant_id>  # Upload file
+GET    /api/v1/files/                                # List files
+GET    /api/v1/files/<file_id>/Download              # Download file
+POST   /api/v1/files/                                # Upload file
 DELETE /api/v1/files/<file_id>                       # Delete file
 
 # User/Permission Management
-GET    /api/v1/permissions?file=<file_id>            # Get file permissions
+GET    /api/v1/permissions                           # Get file permissions
 POST   /api/v1/permissions                           # Set permissions
 ```
 

@@ -1,4 +1,6 @@
-import pytest
+from io import StringIO
+from unittest.mock import patch
+
 from django.test import TestCase
 from django.urls import reverse
 from moto import mock_aws
@@ -7,17 +9,6 @@ from rest_framework.test import APIClient
 
 from moss.store.jwt import get_tokens_for_user
 from moss.store.models import File, Permission, Tenant, User
-
-# ./manage.py show_urls | grep file
-# /api/v1/files/	moss.store.views.FileViewSet	file-list
-# /api/v1/files/<int:id>/	moss.store.views.FileViewSet
-# /api/v1/files/<pk>/	moss.store.views.FileViewSet	file-detail
-# /api/v1/files/<pk>/download/	moss.store.views.FileViewSet	file-download
-# /api/v1/files/<pk>/download\.<format>/	moss.store.views.FileViewSet	file-download
-# /api/v1/files/<pk>\.<format>/	moss.store.views.FileViewSet	file-detail
-# /api/v1/files/upload/	moss.store.views.FileViewSet	file-upload
-# /api/v1/files/upload\.<format>/	moss.store.views.FileViewSet	file-upload
-# /api/v1/files\.<format>/	moss.store.views.FileViewSet	file-list
 
 
 class AdminFileOpsTests(TestCase):
@@ -31,8 +22,8 @@ class AdminFileOpsTests(TestCase):
     """
 
     def setUp(self):
-        self.mock_aws = mock_aws()
-        self.mock_aws.start()
+        self.service_patch = patch("moss.store.service.S3_SERVICE")
+        self.service_mock = self.service_patch.start()
 
         self.tenant = Tenant.objects.create(name="test_tenant")
         self.user = User.objects.create_user(
@@ -45,19 +36,20 @@ class AdminFileOpsTests(TestCase):
         self.test_file = File.objects.create(
             tenant=self.tenant, name="test_file", path="test_path", created_by=self.user
         )
-        Permission.objects.create(user=self.user, file=self.test_file, role="ADMIN")
 
     def tearDown(self):
-        self.mock_aws.stop()
+        self.service_patch.stop()
 
     def test_download_file(self):
-        """An Aptible user can download any file."""
+        """A user with view permissions can download a file."""
         url = reverse("file-download", args=[1])
+        self.service_mock.generate_presigned_url.return_value = "http://example.com/presigned-url/"
+        perms = Permission.objects.create(user=self.user, file=self.test_file, role="VIEWER")
         response = self.api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
 
     def test_list_files(self):
-        """An Aptible user can list all files."""
+        """A user can only list the files in their tenant."""
         url = reverse("file-list")
         response = self.api_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -66,6 +58,11 @@ class AdminFileOpsTests(TestCase):
     def test_upload_file(self):
         """An Aptible user can upload a file anywhere."""
         url = reverse("file-upload")
+        perms = Permission.objects.create(user=self.user, file=self.test_file, role="EDITOR")
         with StringIO("abc") as example:
-            response = self.api_client.post(url, {"file": example, "path": "some/path", "tenant": self.tenant.id})
+            response = self.api_client.post(
+                url, {"file": example, "path": "some/path", "name": "some-name.txt", "tenant": self.tenant.id}
+            )
+        if response.status_code != status.HTTP_201_CREATED:
+            assert False, response
         assert response.status_code == status.HTTP_201_CREATED

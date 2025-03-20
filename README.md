@@ -26,12 +26,12 @@ As it says in src/moss/settings.py, it should be more 12-factor friendly, but ha
 
 ## Testing
 
-The testing framework is there, but the tests are incomplete. Mocking S3 calls requires some special effort and I decided to focus on the implementation.
+The basic tests are there, but the tests are incomplete. There's work to be done on permissions, so building out a lot of tests around permissions would be my next step.
 
 
 ## Setup and Demo Notes
 
-- Run 'poetry run ./src/manage.py createsupertenant` instead of the usual `createsuperuser` to avoid a constraint violation creating the user.
+- Run `poetry run ./src/manage.py createsupertenant` instead of the usual `createsuperuser` to avoid a constraint violation creating the user.
 - Run `poetry run ./src/manage.py createusertoken $id | jq -r '"Authorization: Bearer \(.access)"' > token_{username}.txt` to create a file you can use for curl commands for a given user.
 
 
@@ -39,9 +39,9 @@ The testing framework is there, but the tests are incomplete. Mocking S3 calls r
 
 ### Structure and Testing
 
-1. Now that the application has some useful behaviors testing should be a priority. Correctly mocking the cloud interface is key to getting the tests in a good state.
-2. For expedience I mostly let django tooling determine the layout of the application.
-3. I could iterate faster with some useful fixtures to load a testing environment.
+1. Now that the application has some useful behaviors testing should be a priority.
+2. For expedience I mostly let django tooling determine the layout of the application. It'd be nice to structure the application more intentionally.
+3. I could iterate faster with some useful fixtures to load for local development and testing.
 
 ### Authentication and Permissions
 
@@ -49,8 +49,9 @@ The testing framework is there, but the tests are incomplete. Mocking S3 calls r
   - The admin should automatically get permission to view and edit files.
   - Probably the file creator should be an admin on the file they create.
   - It may make sense for a user in a tenant to have some kind of access to all future files in that tenant.
+  - A user should probably not be able to list all files in their tenant -- they should only be able to list files they can otherwise access.
 2. Users will need a sensible way to get their JWT tokens. Right how that's manual.
-3. It should probably be an error to try to assign permissions across tenants.
+3. It maybe should be an error to try to assign permissions across tenants. (Then again, this is worth some thought, as sharing across tenants isn't always a bad thing.)
 
 ### Implementation
 
