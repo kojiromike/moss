@@ -154,7 +154,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
 }
 
-AWS_STORAGE_BUCKET_NAME = "unmoving_stone"
+AWS_STORAGE_BUCKET_NAME = "moss.unmoving-stone"
 ##
 # Don't put our secret AWS credentials in here
 # Instead, let the boto3 default credential chain handle them
