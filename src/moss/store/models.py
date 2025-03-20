@@ -29,11 +29,14 @@ class File(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     path = models.CharField(max_length=1024)
-    s3_key = models.CharField(max_length=1024)
     # size = models.BigIntegerField()
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def s3_key(self):
+        return f"{self.tenant}/{self.path}/{self.name}"
 
     def __str__(self):
         return f"{self.tenant}/{self.path}/{self.name}"

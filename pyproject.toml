@@ -31,6 +31,7 @@ line-length = 120
 profile = "black"
 
 [tool.poetry.group.dev.dependencies]
+moto = {extras = ["s3"], version = "^5.1.1"}
 pytest-django = "^4.10.0"
 
 [tool.pytest.ini_options]
