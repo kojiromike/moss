@@ -1,3 +1,5 @@
+"""Define the data models for the store app"""
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -43,6 +45,8 @@ class File(models.Model):
 
 
 class Permission(models.Model):
+    """Define the types of roles and how they can access files"""
+
     ROLE_CHOICES = (
         ("ADMIN", "Admin"),
         ("EDITOR", "Editor"),

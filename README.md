@@ -43,17 +43,19 @@ The testing framework is there, but the tests are incomplete. Mocking S3 calls r
 2. For expedience I mostly let django tooling determine the layout of the application.
 3. I could iterate faster with some useful fixtures to load a testing environment.
 
-### Permissions
+### Authentication and Permissions
 
 1. Currently we have to create permissions manually. Many permissions should be assigned automatically based on normal flows, such as:
   - The admin should automatically get permission to view and edit files.
   - Probably the file creator should be an admin on the file they create.
   - It may make sense for a user in a tenant to have some kind of access to all future files in that tenant.
-2. It should probably be an error to try to assign permissions across tenants.
+2. Users will need a sensible way to get their JWT tokens. Right how that's manual.
+3. It should probably be an error to try to assign permissions across tenants.
 
 ### Implementation
 
 1. Download doesn't actually download the file. It probably should. (Right now it prints out its presigned url.)
+2. DRF has a nice feature for bulk handling. It might be nice to be able to upload or download multiple files at a time.
 
 ### Operations
 

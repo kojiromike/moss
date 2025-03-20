@@ -1,3 +1,5 @@
+"""serdes for models so that validation and serdes doesn't happen one-field-at-a-time in the views."""
+
 from rest_framework import serializers
 
 from moss.store import models
@@ -5,6 +7,8 @@ from moss.store.service import S3_SERVICE
 
 
 class FileSerializer(serializers.ModelSerializer):
+    """Upload the file to S3 when creating it."""
+
     file = serializers.FileField(write_only=True)
 
     class Meta:
@@ -26,6 +30,8 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class PermissionSerializer(serializers.ModelSerializer):
+    """Serialize the permissions object as json"""
+
     class Meta:
         model = models.Permission
         fields = ("id", "user", "file", "role")

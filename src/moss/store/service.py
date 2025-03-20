@@ -20,6 +20,7 @@ class S3Service:
         return key
 
     def generate_presigned_url(self, key, expiration_secs=3600):
+        """In lieu of actually downloading, for now"""
         params = {
             "Bucket": self.bucket_name,
             "Key": key,

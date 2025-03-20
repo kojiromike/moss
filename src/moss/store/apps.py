@@ -1,3 +1,5 @@
+"""Make the app installable in Django"""
+
 from django.apps import AppConfig
 
 

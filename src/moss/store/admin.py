@@ -1,3 +1,5 @@
+"""Register all the models so they show up in the admin"""
+
 from django.contrib import admin
 
 from moss.store import models
