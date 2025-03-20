@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
-from moss.store.models import File
+from moss.store.models import File, Permission
 from moss.store.perms import HasFilePermission
 from moss.store.serializers import FileSerializer, PermissionSerializer
 from moss.store.service import S3_SERVICE
@@ -61,6 +61,8 @@ class PermissionViewSet(viewsets.ModelViewSet):
 
     Permissions define what actions (view, edit, admin) a user can perform on a file.
     """
+
+    queryset = Permission.objects.all()
 
     serializer_class = PermissionSerializer
     permission_classes = (IsAuthenticated, IsAdminUser)
