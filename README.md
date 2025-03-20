@@ -13,6 +13,7 @@ I sketched out the API, but didn't spend time working on a GUI, other than to en
 
 I thought creating a reliable interaction with both the database and s3 would be the tricky part, so I wanted to tackle that first. I decided to keep it simple by only using a single bucket, and leaving the isolation up to the permissions model in the application.
 
+
 ## The Cloud
 
 As a PoC, this is only designed to work with S3 for now. It could be extended to work with GCloud, etc, but would require some effort to do so. Authenticating to S3 uses boto3's default credential chain via a profile name, currently hard-coded to "moss".
@@ -35,15 +36,19 @@ The testing framework is there, but the tests are incomplete. Mocking S3 calls r
 
 ## Next Steps
 
+### Permissions
 1. Currently we have to create permissions manually. Many permissions should be assigned automatically based on normal flows, such as:
   - The admin should automatically get permission to view and edit files.
   - Probably the file creator should be an admin on the file they create.
   - It may make sense for a user in a tenant to have some kind of access to all future files in that tenant.
 2. It should probably be an error to try to assign permissions across tenants.
 
+### Implementation
+
+1. Download doesn't actually download the file. It probably should. (Right now it prints out its presigned url.)
 
 ## Challenges
 
 Scaling: Using a single bucket and the tenant name being the only programmatic part of the prefix means that this thing can't scale as effectively as it probably should, and has the potential for a noisy-neighbor problem. This could be fixed by using more buckets or by introducing a uniformly distributed random hash to the object prefixes.
 
-Permissions: It'd be a lot nicer to integrate permissions directly with IAM instead of using the django permissions model. That would require significant effort, especially if this thing should be multi-cloud.
+Permissions: It'd be a lot more secure and in the long run nicer to integrate permissions directly with IAM instead of using the django permissions model. However, it would require significant effort, and might not be worth it, especially if this thing should be multi-cloud.

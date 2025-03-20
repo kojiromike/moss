@@ -18,9 +18,10 @@ class FileSerializer(serializers.ModelSerializer):
         created_by = user
         file = validated_data.pop("file")
         path = validated_data["path"]
+        name = validated_data["name"]
         validated_data["tenant"] = tenant
         validated_data["created_by"] = created_by
-        S3_SERVICE.upload_file(file, tenant, path)
+        S3_SERVICE.upload_file(file, tenant, path, name)
         return super().create(validated_data)
 
 
